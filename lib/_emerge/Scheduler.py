@@ -96,6 +96,7 @@ class Scheduler(PollScheduler):
             "buildpkg",
             "buildpkg_exclude",
             "buildpkgonly",
+            "nobinpkg_liveebuild",
             "fetch_all_uri",
             "fetchonly",
             "pretend",

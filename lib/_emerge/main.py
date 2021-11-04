@@ -26,6 +26,7 @@ options = [
     "--alphabetical",
     "--ask-enter-invalid",
     "--buildpkgonly",
+    "--nobinpkg-liveebuild",
     "--changed-use",
     "--columns",
     "--debug",
@@ -57,6 +58,7 @@ options = [
 shortmapping = {
     "1": "--oneshot",
     "B": "--buildpkgonly",
+    "L": "--nobinpkg-liveebuild",
     "c": "--depclean",
     "C": "--unmerge",
     "d": "--debug",

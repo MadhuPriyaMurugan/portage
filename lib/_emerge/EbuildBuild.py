@@ -347,14 +347,36 @@ class EbuildBuild(CompositeTask):
         # For volatile sources (eg., git), the PROPERTIES parameter in
         # the ebuild is set to 'live'
 
+        nobinpkg = False
+
+        if self.opts.nobinpkg_liveebuild:
+            nobinpkg = True
+
         live_ebuild = False
 
         if "live" in self.settings.get("PROPERTIES", "").split():
             live_ebuild = True
 
+        build_nobinpkg = (
+            "buildpkg" in features
+            and live_ebuild
+            and nobinpkg
+        )
+
+        msg = (
+            "Checking values : ",
+            "nobinpkg :  %s" % str(nobinpkg),
+            "live_ebuild :  %s" % str(live_ebuild),
+            "buildpkg :  %s" % str("buildpkg" in features),
+            "build_nobinpkg :  %s" % str(build_nobinpkg),
+        )
+        out = portage.output.EOutput()
+        for l in msg:
+            out.einfo(l)
+
         if (
             "buildpkg" in features or self._issyspkg
-        ) and not live_ebuild and not self.opts.buildpkg_exclude.findAtomForPackage(pkg):
+        ) and not build_nobinpkg and not self.opts.buildpkg_exclude.findAtomForPackage(pkg):
 
             self._buildpkg = True
 

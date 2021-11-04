@@ -7373,17 +7373,43 @@ class depgraph:
                     # Refrain from using binary cache for packages from volatile
                     # sources even if --usepkg is passed.
 
+                    build_nobinpkg = False
+
+                    if "--nobinpkg-liveebuild" in self._frozen_config.myopts:
+                        build_nobinpkg = True
+
                     live_ebuild = False
 
                     if "live" in pkg._metadata.get("PROPERTIES", "").split():
                         live_ebuild = True
+
+                    writemsg(
+                        "built : %s\n\n" % built,
+                        noiselevel=-1,
+                    )
+
+                    writemsg(
+                        "installed : %s\n\n" % installed,
+                        noiselevel=-1,
+                    )
+
+                    writemsg(
+                        "usepkg : %s\n\n" % usepkg_exclude.findAtomForPackage(
+                            pkg, modified_use=self._pkg_use_enabled(pkg)),
+                        noiselevel=-1,
+                    )
+
+                    writemsg(
+                        "build_nobinpkg : %s\n\n" % build_nobinpkg,
+                        noiselevel=-1,
+                    )
 
                     if (
                         built
                         and not installed
                         and (usepkg_exclude.findAtomForPackage(
                             pkg, modified_use=self._pkg_use_enabled(pkg)
-                        ) or live_ebuild)
+                        ) or (build_nobinpkg and live_ebuild))
                     ):
                         break
 
