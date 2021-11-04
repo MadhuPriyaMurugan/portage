@@ -7370,12 +7370,20 @@ class depgraph:
                     ):
                         continue
 
+                    # Refrain from using binary cache for packages from volatile
+                    # sources even if --usepkg is passed.
+
+                    live_ebuild = False
+
+                    if "live" in pkg._metadata.get("PROPERTIES", "").split():
+                        live_ebuild = True
+
                     if (
                         built
                         and not installed
-                        and usepkg_exclude.findAtomForPackage(
+                        and (usepkg_exclude.findAtomForPackage(
                             pkg, modified_use=self._pkg_use_enabled(pkg)
-                        )
+                        ) or live_ebuild)
                     ):
                         break
 
