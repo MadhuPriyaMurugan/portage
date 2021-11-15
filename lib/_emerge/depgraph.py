@@ -7370,11 +7370,30 @@ class depgraph:
                     ):
                         continue
 
+                    # We can choose not to install a live package from using binary
+                    # cache by disabling it in FEATURES="-buildpkg-live", which is
+                    # enabled by default.
+
+                    settings = self._frozen_config.roots[root].settings
+
+                    buildpkg_live_enabled = True
+
+                    if not "buildpkg-live" in settings.features:
+                        buildpkg_live_enabled = False
+
+                    live_ebuild = False
+
+                    if "live" in pkg._metadata.get("PROPERTIES", "").split():
+                        live_ebuild = True
+
                     if (
                         built
                         and not installed
-                        and usepkg_exclude.findAtomForPackage(
-                            pkg, modified_use=self._pkg_use_enabled(pkg)
+                        and (
+                            usepkg_exclude.findAtomForPackage(
+                                pkg, modified_use=self._pkg_use_enabled(pkg)
+                            )
+                            or (not buildpkg_live_enabled and live_ebuild)
                         )
                     ):
                         break
