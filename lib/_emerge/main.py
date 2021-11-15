@@ -51,6 +51,7 @@ options = [
     "--skipfirst",
     "--tree",
     "--unordered-display",
+    "--usepkg-exclude-live",
     "--update",
 ]
 

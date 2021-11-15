@@ -7374,12 +7374,10 @@ class depgraph:
                     # cache by disabling it in FEATURES="-buildpkg-live", which is
                     # enabled by default.
 
-                    settings = self._frozen_config.roots[root].settings
+                    usepkg_exclude_live = False
 
-                    buildpkg_live_enabled = True
-
-                    if not "buildpkg-live" in settings.features:
-                        buildpkg_live_enabled = False
+                    if "--usepkg-exclude-live" in self._frozen_config.myopts:
+                        usepkg_exclude_live = True
 
                     live_ebuild = False
 
@@ -7393,7 +7391,7 @@ class depgraph:
                             usepkg_exclude.findAtomForPackage(
                                 pkg, modified_use=self._pkg_use_enabled(pkg)
                             )
-                            or (not buildpkg_live_enabled and live_ebuild)
+                            or (usepkg_exclude_live and live_ebuild)
                         )
                     ):
                         break
